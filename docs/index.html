@@ -1,0 +1,737 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>example title</title>
+<meta name="generator" content="joDoc">
+<link rel="stylesheet" type="text/css" href="docbody.css">
+<link rel="stylesheet" type="text/css" href="doc.css">
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width">
+<meta name="format-detection" content="false">
+</head>
+<body>
+<h1><a name="E">E</a></h1>
+
+<p>全局函数和对象，用于查找DOM元素</p>
+
+<pre><code>var nodeList = <a href="#E">E</a>("#container .item");
+nodeList.addClass("focus").show();
+</code></pre>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>css()</code>
+设置或获取DOM元素的样式</p></li>
+<li><p><code>hide()</code>
+隐藏元素</p></li>
+<li><p><code>show()</code>
+显示元素</p></li>
+<li><p><code>item(index)</code>
+在查找到的NodeList中获得第N个DOM元素</p></li>
+<li><p><code>index()</code>
+获得元素在NodeList中的索引</p></li>
+<li><p><code>addClass(className)</code>
+为DOM元素添加css class</p></li>
+<li><p><code>removeClass(className)</code>
+为DOM元素移除css class</p></li>
+<li><p><code>hasClass(className)</code>
+判断DOM元素有css class</p></li>
+</ul>
+
+<h2>静态属性和方法</h2>
+
+<ul>
+<li><p><code>guid()</code>
+生成GUID</p></li>
+<li><p><code>mix()</code>
+合并两个对象</p></li>
+<li><p><code>merge</code>
+合并两个对象</p></li>
+<li><p><code>namespace</code>
+生成命名空间</p></li>
+<li><p><code>extend</code>
+类继承</p></li>
+<li><p><code>declare</code>
+类定义</p>
+
+<pre><code><a href="#E">E</a>.declare("ClassName", {
+    superclass: Superclass
+    instanceProperty: value, //基本类型
+    constructor: function(){
+    },
+    instanceMethod: function(){}
+}, {
+    staticProperty: staticPropertyValue,
+    staticMethod: function(){}
+});
+</code></pre></li>
+<li><p><code>Array</code></p></li>
+</ul>
+
+<h1><a name="Signal">Signal</a></h1>
+
+<p>信号</p>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>add(listener)</code>
+为信号添加监听器</p></li>
+<li><p><code>addOnce(listener, scope, priority)</code>
+为信号添加一次性监听器，监听函数执行后能自动解绑监听器</p></li>
+<li><p><code>remove(listener, scope, priority)</code>
+为信号移除监听器</p></li>
+<li><p><code>removeAll()</code>
+移除信号的所有监听器</p></li>
+<li><p><code>dispatch(...)</code>
+派发信号</p></li>
+<li><p><code>halt()</code>
+阻止信号的传播</p></li>
+</ul>
+
+<h1><a name="Component">Component</a></h1>
+
+<p>组件基类</p>
+
+<pre><code>var component = new <a href="#Component">Component</a>({
+    container: '#containerId',
+    signals: {
+        customSignal: function(){
+        }
+    }
+});
+</code></pre>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>setIncludeInLayout(b)</code>
+设置组件隐藏时是否会释放所占的页面空间。</p></li>
+<li><p><code>getIncludeInLayout()</code>
+组件隐藏时是否会释放所占的页面空间。</p></li>
+<li><p><code>show()</code>
+显示组件</p></li>
+<li><p><code>hide()</code>
+隐藏组件</p></li>
+<li><p><code>getVisible()</code>
+组件是否可视</p></li>
+<li><p><code>enable()</code>
+启用组件</p></li>
+<li><p><code>disable()</code>
+禁用组件</p></li>
+<li><p><code>getEnabled()</code>
+组件是否可用</p></li>
+<li><p><code>setOpacity()</code>
+设置组件透明度</p></li>
+<li><p><code>getOpacity()</code>
+返回组件透明度</p></li>
+<li><p><code>getParent()</code>
+返回组件所在的容器</p></li>
+<li><p><code>setFocus()</code>
+设置页面当前的focus元素</p></li>
+<li><p><code>getFocus()</code>
+返回页面当前的focus元素</p></li>
+<li><p><code>on(target, type, listener)</code>
+给target绑定监听器</p></li>
+<li><p><code>detach(target, type, listener, agent)</code>
+给target解绑监听器</p></li>
+<li><p><code>delegate(target, selector, type, listener, agent)</code>
+给target绑定delegate监听器</p></li>
+</ul>
+
+<h2>受保护的方法</h2>
+
+<ul>
+<li><p><code>createSignals()</code>
+创建组件会触发的信号。比如button有click信号，tab有change信号。</p></li>
+<li><p><code>defineActivable()</code>
+定义组件中会模拟hover效果的元素。因为mobile中CSS不支持:hover，所以定义在该函数中的DOM元素会在touchstart的时候加上一个hover class。</p></li>
+<li><p><code>createChildren()</code>
+创建组件的DOM树。</p></li>
+<li><p><code>invalidate()</code>
+对组件进行配置。比如button的文本，输入框的value，tab的文本等等。</p></li>
+<li><p><code>initEvents()</code>
+监听DOM中相应元素的事件，然后作为组件封装的信号（signal）发出去。</p></li>
+</ul>
+
+<h1><a name="Container">Container</a></h1>
+
+<p>容器组件的基类</p>
+
+<pre><code>var container = new <a href="#E">E</a>.<a href="#Container">Container</a>({
+    container: "#container",
+    children: [
+        new <a href="#E">E</a>.Button({label: "button1", theme:"red"}),
+        new <a href="#E">E</a>.Button({label: "button2", theme:"green"}),
+        new <a href="#E">E</a>.Button({label: "button3", theme:"blue"})
+    ]
+});
+</code></pre>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Component">Component</a></li>
+</ul>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>addChild(child)</code>
+添加组件到容器</p></li>
+<li><p><code>addChildAt(child, index)</code>
+添加组件到容器的指定位置</p></li>
+<li><p><code>removeChild(child)</code>
+从容器中移除组件</p></li>
+<li><p><code>removeChildAt(index)</code>
+从容器指定位置移除组件</p></li>
+<li><p><code>getChildAt(index)</code>
+获取指定位置的组件</p></li>
+<li><p><code>hasChild(child)</code>
+是否包含某个组件</p></li>
+<li><p><code>children()</code>
+返回容器中的组件列表</p></li>
+</ul>
+
+<h1><a name="ListComponent">ListComponent</a></h1>
+
+<p>列表组件基类。</p>
+
+<pre><code>var component = new <a href="#E">E</a>.<a href="#ListComponent">ListComponent</a>({
+        container: '#containerId',
+        signals: {
+            change: function(){
+            }
+        }
+ });
+</code></pre>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Component">Component</a></li>
+</ul>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>setData(data)</code>
+设置列表的数据</p></li>
+<li><p><code>getData()</code>
+获取列表的数据</p></li>
+<li><p><code>addItem(item)</code>
+添加一个列表项</p></li>
+<li><p><code>addItemAt(item, index)</code>
+从指定位置添加一个列表项</p></li>
+<li><p><code>getItemAt(index)</code>
+从指定位置获取列表的数据</p></li>
+<li><p><code>removeItem(item)</code>
+移除某个列表项</p></li>
+<li><p><code>removeItemAt(index)</code>
+根据索引移除列表项</p></li>
+<li><p><code>getSelectedIndex()</code>
+获取当前选中的列表索引</p></li>
+<li><p><code>setSelectedIndex(index)</code>
+设置当前选中的列表索引</p></li>
+<li><p><code>getSelectedItem()</code>
+获取当前选中的列表数据</p></li>
+<li><p><code>setSelectedItem(item)</code>
+设置当前选中的列表索引</p></li>
+</ul>
+
+<h2>信号</h2>
+
+<ul>
+<li><p><code>change</code>
+选中的列表索引发生改变了。</p></li>
+<li><p><code>itemClick</code>
+列表项被点击了。</p></li>
+</ul>
+
+<h1><a name="ListComponent">ListComponent</a></h1>
+
+<p>表单组件基类。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Component">Component</a></li>
+</ul>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>getValue()</code></p></li>
+<li><p><code>setValue(value)</code></p></li>
+<li><p><code>getPlaceholder()</code></p></li>
+<li><p><code>setPlaceholder()</code></p></li>
+</ul>
+
+<h2>信号</h2>
+
+<ul>
+<li><code>change</code>
+表单数据发生改变了。</li>
+</ul>
+
+<h1><a name="Label">Label</a></h1>
+
+<p>文本组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Component">Component</a></li>
+</ul>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>getValue()</code></p></li>
+<li><p><code>setValue(value)</code></p></li>
+</ul>
+
+<h1><a name="HTML">HTML</a></h1>
+
+<p>文本组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Label">Label</a></li>
+</ul>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>getValue()</code></p></li>
+<li><p><code>setValue(value)</code></p></li>
+</ul>
+
+<h1><a name="Label">Label</a></h1>
+
+<p>按钮组件。</p>
+
+<pre><code>var button = new Button({
+    label: "click me",
+    container: "#buttonContainer",
+    signals: {
+        click: function(){
+            alert("button clicked");
+        }
+    }
+});
+</code></pre>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Component">Component</a></li>
+</ul>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>getLabel()</code>
+返回按钮文本</p></li>
+<li><p><code>setLabel(value)</code>
+设置按钮文本</p></li>
+</ul>
+
+<h1><a name="NavBar">NavBar</a></h1>
+
+<p><a href="#NavBar">NavBar</a>组件。</p>
+
+<pre><code>var navBar = new <a href="#NavBar">NavBar</a>({
+    container: "#navContainer",
+    signals: {
+        back: function(){
+            alert("back button clicked");
+        }
+    }
+});
+</code></pre>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Component">Component</a></li>
+</ul>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>getTitle()</code>
+返回标题文本</p></li>
+<li><p><code>setTitle(title)</code>
+设置标题文本</p></li>
+</ul>
+
+<h1><a name="Box">Box</a></h1>
+
+<p><a href="#Box">Box</a>组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Container">Container</a></li>
+</ul>
+
+<h1><a name="HBox">HBox</a></h1>
+
+<p><a href="#HBox">HBox</a>组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Box">Box</a></li>
+</ul>
+
+<h1><a name="VBox">VBox</a></h1>
+
+<p><a href="#VBox">VBox</a>组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Box">Box</a></li>
+</ul>
+
+<h1><a name="Group">Group</a></h1>
+
+<p><a href="#Group">Group</a>组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Container">Container</a></li>
+</ul>
+
+<h1><a name="Toggle">Toggle</a></h1>
+
+<p><a href="#Toggle">Toggle</a>组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Component">Component</a></li>
+</ul>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>isOn()</code>
+判断toggle是否是打开状态</p></li>
+<li><p><code>toggle()</code>
+切换状态</p></li>
+<li><p><code>setOnLabel(label)</code>
+设置打开状态的文本</p></li>
+<li><p><code>getOnLabel()</code>
+获取打开状态的文本</p></li>
+<li><p><code>setOffLabel(label)</code>
+设置关闭状态的文本</p></li>
+<li><p><code>getOffLabel()</code>
+获取关闭状态的文本</p></li>
+<li><p><code>setCloseHighlight(b)</code>
+设置关闭状态是否高亮显示，默认不高亮显示。</p></li>
+<li><p><code>getCloseHighlight()</code>
+判断关闭状态是否高亮显示。</p></li>
+</ul>
+
+<h2>信号</h2>
+
+<ul>
+<li><code>change</code>
+toggle的状态发生变化时触发。</li>
+</ul>
+
+<h1><a name="Input">Input</a></h1>
+
+<p><a href="#Input">Input</a>组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li>FormElement</li>
+</ul>
+
+<h1><a name="TextArea">TextArea</a></h1>
+
+<p><a href="#TextArea">TextArea</a>组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li>FormElement</li>
+</ul>
+
+<h1><a name="Checkbox">Checkbox</a></h1>
+
+<p>复选框组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li>FormElement</li>
+</ul>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>setChecked(b)</code>
+设置组件的check状态</p></li>
+<li><p><code>getChecked()</code>
+组件是否是check状态</p></li>
+</ul>
+
+<h1><a name="Radio">Radio</a></h1>
+
+<p>单选框组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Checkbox">Checkbox</a></li>
+</ul>
+
+<h1><a name="Option">Option</a></h1>
+
+<p>选项切换组件。</p>
+
+<pre><code>var option = new <a href="#E">E</a>.<a href="#Option">Option</a>({
+        container: "#container",
+        signals: {
+            change: function(selectedIndex){
+                alert("the option component actived at the " + selectedIndex + " option item");
+            }
+        }
+ });
+</code></pre>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#ListComponent">ListComponent</a></li>
+</ul>
+
+<h1><a name="Tab">Tab</a></h1>
+
+<p>选项卡组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#ListComponent">ListComponent</a></li>
+</ul>
+
+<h1><a name="ViewStack">ViewStack</a></h1>
+
+<p>可切换的视图组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#ListComponent">ListComponent</a></li>
+</ul>
+
+<h1><a name="HRule">HRule</a></h1>
+
+<p>水平分割线组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Component">Component</a></li>
+</ul>
+
+<h1><a name="List">List</a></h1>
+
+<p>列表组件。</p>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#ListComponent">ListComponent</a></li>
+</ul>
+
+<h1><a name="List.ItemRenderer">List.ItemRenderer</a></h1>
+
+<p>列表组件的单元格渲染器。</p>
+
+<h1><a name="BusyIndicator">BusyIndicator</a></h1>
+
+<p>忙指示器。</p>
+
+<h2>继承</h2>
+
+<p><a href="#Component">Component</a></p>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>setSize(size)</code>
+设置忙指示器的大小，可以为S, M, L, XL, XXL</p></li>
+<li><p><code>getSize()</code>
+获取忙指示器的大小。</p></li>
+</ul>
+
+<h1><a name="Shim">Shim</a></h1>
+
+<p>遮罩组件。</p>
+
+<h2>继承</h2>
+
+<p><a href="#Container">Container</a></p>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>setHost(host)</code>
+设置浮层所在的DOM或<a href="#Container">Container</a>。</p></li>
+<li><p><code>getHost()</code>
+设置浮层所在的DOM或<a href="#Container">Container</a>。</p></li>
+</ul>
+
+<h2>静态方法</h2>
+
+<h1><a name="Alert">Alert</a></h1>
+
+<p><a href="#Alert">Alert</a>组件。</p>
+
+<h2>继承</h2>
+
+<p><a href="#Shim">Shim</a></p>
+
+<h2>方法</h2>
+
+<ul>
+<li><p><code>setHost(host)</code>
+设置浮层所在的DOM或<a href="#Container">Container</a>。</p></li>
+<li><p><code>getHost()</code>
+设置浮层所在的DOM或<a href="#Container">Container</a>。</p></li>
+</ul>
+
+<h2>静态方法</h2>
+
+<p>-<code>show(content, title, buttonFlags, closeFunction)</code>
+显示<a href="#Alert">Alert</a>框</p>
+
+<pre><code>var content = "html string",
+    title = "alert title",
+    buttonFlags = <a href="#E">E</a>.<a href="#Alert">Alert</a>.OK | <a href="#E">E</a>.<a href="#Alert">Alert</a>.CANCEL,
+    closeFunction = function(button){
+        if(button == <a href="#E">E</a>.<a href="#Alert">Alert</a>.OK){
+            console.log("你点了OK按钮");
+        }else{
+            console.log("你点了CANCEL按钮");
+        }
+    };
+<a href="#E">E</a>.<a href="#Alert">Alert</a>.show(content, title, buttonFlags, closeFunction);
+</code></pre>
+
+</body>
+</html>
+
+
+<hr>
+
+<h1>Index</h1>
+<div id="index">
+
+<h2>A</h2>
+
+<ul>
+<li><a href="#Alert">Alert</a></li>
+</ul>
+
+<h2>B</h2>
+
+<ul>
+<li><a href="#Box">Box</a></li>
+<li><a href="#BusyIndicator">BusyIndicator</a></li>
+</ul>
+
+<h2>C</h2>
+
+<ul>
+<li><a href="#Checkbox">Checkbox</a></li>
+<li><a href="#Component">Component</a></li>
+<li><a href="#Container">Container</a></li>
+</ul>
+
+<h2>E</h2>
+
+<ul>
+<li><a href="#E">E</a></li>
+</ul>
+
+<h2>G</h2>
+
+<ul>
+<li><a href="#Group">Group</a></li>
+</ul>
+
+<h2>H</h2>
+
+<ul>
+<li><a href="#HBox">HBox</a></li>
+<li><a href="#HRule">HRule</a></li>
+<li><a href="#HTML">HTML</a></li>
+</ul>
+
+<h2>I</h2>
+
+<ul>
+<li><a href="#Input">Input</a></li>
+</ul>
+
+<h2>L</h2>
+
+<ul>
+<li><a href="#Label">Label</a></li>
+<li><a href="#List">List</a></li>
+<li><a href="#List.ItemRenderer">List.ItemRenderer</a></li>
+<li><a href="#ListComponent">ListComponent</a></li>
+</ul>
+
+<h2>N</h2>
+
+<ul>
+<li><a href="#NavBar">NavBar</a></li>
+</ul>
+
+<h2>O</h2>
+
+<ul>
+<li><a href="#Option">Option</a></li>
+</ul>
+
+<h2>R</h2>
+
+<ul>
+<li><a href="#Radio">Radio</a></li>
+</ul>
+
+<h2>S</h2>
+
+<ul>
+<li><a href="#Shim">Shim</a></li>
+<li><a href="#Signal">Signal</a></li>
+</ul>
+
+<h2>T</h2>
+
+<ul>
+<li><a href="#Tab">Tab</a></li>
+<li><a href="#TextArea">TextArea</a></li>
+<li><a href="#Toggle">Toggle</a></li>
+</ul>
+
+<h2>V</h2>
+
+<ul>
+<li><a href="#VBox">VBox</a></li>
+<li><a href="#ViewStack">ViewStack</a></li>
+</ul></div>
+

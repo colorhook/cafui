@@ -1,0 +1,1 @@
+./jodoc --template lib/template.html --title "example title" easy/*.js > docs/index.html --markdown Markdown.pl --smartypants SmartyPants.pl
