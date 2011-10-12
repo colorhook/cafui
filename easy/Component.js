@@ -455,7 +455,7 @@ Signal
 - `addOnce(listener, scope, priority)`
 为信号添加一次性监听器，监听函数执行后能自动解绑监听器
 
-- `remove(listener, scope, priority)`
+- `remove(listener)`
 为信号移除监听器
 
 - `removeAll()`
@@ -465,7 +465,7 @@ Signal
 派发信号
 
 - `halt()`
-阻止信号的传播
+终止信号的传播
 
  */
 E.declare("SignalBinding", {
@@ -608,16 +608,14 @@ E.declare('Signal', {
 /**
 Component
 ====
+组件基类。每个组件都有一个可选的构造参数，这个参数是一个Hash对象，用来配置组件的状态、数据和信号处理函数。例如：
 
-组件基类
-
-		var component = new Component({
+		var component = new E.Component({
 			container: '#containerId',
-			signals: {
-				customSignal: function(){
-				}
-			}
+			disabled: true
 		});
+
+在上面的例子中，container是一个DOM Element或者一个字符串选择器，如果指定了container，则组件被构造完成后会被自动插入到document文档中。
 
 方法
 -----
@@ -626,7 +624,7 @@ Component
 设置组件隐藏时是否会释放所占的页面空间。
 
 - `getIncludeInLayout()`
-组件隐藏时是否会释放所占的页面空间。
+组件隐藏时是否会释放所占的页面空间，默认不占用。
 
 - `show()`
 显示组件
@@ -673,7 +671,7 @@ Component
 受保护的方法
 -------------
 - `createSignals()`
-创建组件会触发的信号。比如button有click信号，tab有change信号。
+创建组件拥有的信号。比如button有click信号，tab有change信号。
 
 - `defineActivable()`
 定义组件中会模拟hover效果的元素。因为mobile中CSS不支持:hover，所以定义在该函数中的DOM元素会在touchstart的时候加上一个hover class。
@@ -682,11 +680,10 @@ Component
 创建组件的DOM树。
 
 - `invalidate()`
-对组件进行配置。比如button的文本，输入框的value，tab的文本等等。
+对组件进行配置。比如button的文本，输入框的value，tab的标签等等。
 
 - `initEvents()`
 监听DOM中相应元素的事件，然后作为组件封装的信号（signal）发出去。
-
  */
 E.declare("Component", {
 	
@@ -1099,8 +1096,7 @@ E.declare("Component", {
 /**
 Container
 ====
-
-容器组件的基类
+容器组件的基类。容器组件可以包含其它组件，也可以动态移除组件。
 
 		var container = new E.Container({
 			container: "#container",
@@ -1219,16 +1215,7 @@ E.declare("Container", {
 /**
 ListComponent
 ====
-
-列表组件基类。
-
-		var component = new E.ListComponent({
-				container: '#containerId',
-				signals: {
-					change: function(){
-					}
-				}
-		 });
+列表组件基类。列表组件是List, Option, Tab, ViewStack等组件的基类。
 
 继承
 ----
@@ -1466,10 +1453,9 @@ E.declare("ListComponent", {
 	}
 });
 /**
-ListComponent
+FormElement
 ====
-
-表单组件基类。
+表单组件基类。FormElement是Input, TextArea, Checkbox, Radio等组件的基类。
 
 继承
 ----
@@ -1490,7 +1476,7 @@ ListComponent
 信号
 ----
 - `change`
-表单数据发生改变了。
+表单数据发生改变时触发。
 
  */
 
@@ -1574,7 +1560,6 @@ E.declare("FormElement", {
 /**
 Label
 ====
-
 文本组件。
 
 继承
@@ -1583,17 +1568,17 @@ Label
 
 方法
 -----
-
 - `getValue()`
+获取组件的文本。
 
 - `setValue(value)`
+设置组件的文本。
 
  */
 E.declare("Label", {
 
 	superclass: E.Component,
 	defaultUIClass: 'ui-label',
-	
 
 	invalidate: function(){
 		E.Label.superclass.prototype.invalidate.apply(this, arguments);
@@ -1611,8 +1596,7 @@ E.declare("Label", {
 /**
 HTML
 ====
-
-文本组件。
+HTML文本组件。
 
 继承
 ----
@@ -1620,10 +1604,11 @@ HTML
 
 方法
 -----
-
 - `getValue()`
+获取组件的html文本
 
 - `setValue(value)`
+设置组件的html文本
 
  */
 E.declare("HTML", {
@@ -1639,7 +1624,20 @@ E.declare("HTML", {
 	}
 	
 });
-/*!
+/**
+Icon
+====
+图标组件。
+
+		var icon = new E.Icon({
+			container: '#icon',
+			cls: 'custom-icon-cls'
+		})
+
+继承
+----
+- Component
+
  */
 E.declare("Icon", {
 
@@ -1648,19 +1646,26 @@ E.declare("Icon", {
 	
 });
 /**
-Label
+Button
 ====
 
 按钮组件。
 
-		var button = new Button({
+我们可以在构造函数中定义组件的信号回调函数：
+		var button = new E.Button({
 			label: "click me",
 			container: "#buttonContainer",
 			signals: {
 				click: function(){
-					alert("button clicked");
+					console.log("button is clicked");
 				}
 			}
+		});
+
+也可以单独对信号进行监听：
+		var redButton = new E.Button({theme: "red"});
+		redButton.signals.click.add(function(){
+			console.log("red button is clicked");
 		});
 
 继承
@@ -1719,7 +1724,6 @@ E.declare("Button", {
 /**
 NavBar
 ====
-
 NavBar组件。
 
 		var navBar = new NavBar({
@@ -1739,7 +1743,7 @@ NavBar组件。
 -----
 
 - `getTitle()`
-返回标题文本
+获取标题文本
 
 - `setTitle(title)`
 设置标题文本
@@ -1781,8 +1785,7 @@ E.declare("NavBar", {
 /**
 Box
 ====
-
-Box组件。
+Box组件。它是HBox和VBox组件的基类。
 
 继承
 ----
@@ -1796,8 +1799,15 @@ E.declare("Box", {
 /**
 HBox
 ====
-
-HBox组件。
+HBox组件。HBox组件中的子组件会以水平方向排列。
+		
+		var hbox = new E.HBox({
+			childen: [
+				{className:"Button", label:"Button A"},
+				{className:"Button", label:"Button B"},
+				{className:"Button", label:"Button C"}
+			]
+		});
 
 继承
 ----
@@ -1814,8 +1824,15 @@ E.declare("HBox", {
 /**
 VBox
 ====
-
-VBox组件。
+VBox组件。VBox组件中的子组件会以竖直方向排列。
+		
+		var vbox = new E.VBox({
+			childen: [
+				{className:"Button", label:"Button A"},
+				{className:"Button", label:"Button B"},
+				{className:"Button", label:"Button C"}
+			]
+		});
 
 继承
 ----
@@ -1830,7 +1847,6 @@ E.declare("VBox", {
 /**
 Group
 ====
-
 Group组件。
 
 继承
@@ -1847,7 +1863,6 @@ E.declare("Group", {
 /**
 Toggle
 ====
-
 Toggle组件。
 
 继承
@@ -1970,8 +1985,15 @@ E.declare("Toggle", {
 /**
 Input
 ====
-
-Input组件。
+输入文本框组件。
+		
+		//文本框
+		var input = new E.Input();
+		input.signals.change.add(function(value){
+			console.log("文本框的值变为了:"+value);
+		});
+		//创建数字文本框
+		var digitInput = new E.Input({type:"number",placeholder:"请输入数字"});
 
 继承
 ----
@@ -1987,7 +2009,7 @@ E.declare("Input", {
 /**
 TextArea
 ====
-TextArea组件。
+文本域组件。文本域组件可以让用户输入多行的文本。
 
 继承
 ----
@@ -2101,11 +2123,11 @@ E.declare("Option", {
 /**
 Tab
 ====
-选项卡组件。
+选项卡组件。选项卡组件
 
 继承
 ----
-- ListComponent
+- Option
 
  */
 E.declare("Tab", {

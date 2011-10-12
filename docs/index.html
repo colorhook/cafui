@@ -87,21 +87,20 @@ nodeList.addClass("focus").show();
 <li><p><code>dispatch(...)</code>
 派发信号</p></li>
 <li><p><code>halt()</code>
-阻止信号的传播</p></li>
+终止信号的传播</p></li>
 </ul>
 
 <h1><a name="Component">Component</a></h1>
 
-<p>组件基类</p>
+<p>组件基类。每个组件都有一个可选的构造参数，这个参数是一个Hash对象，用来配置组件的状态、数据和信号处理函数。例如：</p>
 
-<pre><code>var component = new <a href="#Component">Component</a>({
+<pre><code>var component = new <a href="#E">E</a>.<a href="#Component">Component</a>({
     container: '#containerId',
-    signals: {
-        customSignal: function(){
-        }
-    }
+    disabled: true
 });
 </code></pre>
+
+<p>在上面的例子中，container是一个DOM Element或者一个字符串选择器，如果指定了container，则组件被构造完成后会被自动插入到document文档中。</p>
 
 <h2>方法</h2>
 
@@ -109,7 +108,7 @@ nodeList.addClass("focus").show();
 <li><p><code>setIncludeInLayout(b)</code>
 设置组件隐藏时是否会释放所占的页面空间。</p></li>
 <li><p><code>getIncludeInLayout()</code>
-组件隐藏时是否会释放所占的页面空间。</p></li>
+组件隐藏时是否会释放所占的页面空间，默认不占用。</p></li>
 <li><p><code>show()</code>
 显示组件</p></li>
 <li><p><code>hide()</code>
@@ -144,27 +143,27 @@ nodeList.addClass("focus").show();
 
 <ul>
 <li><p><code>createSignals()</code>
-创建组件会触发的信号。比如button有click信号，tab有change信号。</p></li>
+创建组件拥有的信号。比如button有click信号，tab有change信号。</p></li>
 <li><p><code>defineActivable()</code>
 定义组件中会模拟hover效果的元素。因为mobile中CSS不支持:hover，所以定义在该函数中的DOM元素会在touchstart的时候加上一个hover class。</p></li>
 <li><p><code>createChildren()</code>
 创建组件的DOM树。</p></li>
 <li><p><code>invalidate()</code>
-对组件进行配置。比如button的文本，输入框的value，tab的文本等等。</p></li>
+对组件进行配置。比如button的文本，输入框的value，tab的标签等等。</p></li>
 <li><p><code>initEvents()</code>
 监听DOM中相应元素的事件，然后作为组件封装的信号（signal）发出去。</p></li>
 </ul>
 
 <h1><a name="Container">Container</a></h1>
 
-<p>容器组件的基类</p>
+<p>容器组件的基类。容器组件可以包含其它组件，也可以动态移除组件。</p>
 
 <pre><code>var container = new <a href="#E">E</a>.<a href="#Container">Container</a>({
     container: "#container",
     children: [
-        new <a href="#E">E</a>.Button({label: "button1", theme:"red"}),
-        new <a href="#E">E</a>.Button({label: "button2", theme:"green"}),
-        new <a href="#E">E</a>.Button({label: "button3", theme:"blue"})
+        new <a href="#E">E</a>.<a href="#Button">Button</a>({label: "button1", theme:"red"}),
+        new <a href="#E">E</a>.<a href="#Button">Button</a>({label: "button2", theme:"green"}),
+        new <a href="#E">E</a>.<a href="#Button">Button</a>({label: "button3", theme:"blue"})
     ]
 });
 </code></pre>
@@ -196,16 +195,7 @@ nodeList.addClass("focus").show();
 
 <h1><a name="ListComponent">ListComponent</a></h1>
 
-<p>列表组件基类。</p>
-
-<pre><code>var component = new <a href="#E">E</a>.<a href="#ListComponent">ListComponent</a>({
-        container: '#containerId',
-        signals: {
-            change: function(){
-            }
-        }
- });
-</code></pre>
+<p>列表组件基类。列表组件是<a href="#List">List</a>, <a href="#Option">Option</a>, <a href="#Tab">Tab</a>, <a href="#ViewStack">ViewStack</a>等组件的基类。</p>
 
 <h2>继承</h2>
 
@@ -249,9 +239,9 @@ nodeList.addClass("focus").show();
 列表项被点击了。</p></li>
 </ul>
 
-<h1><a name="ListComponent">ListComponent</a></h1>
+<h1><a name="FormElement">FormElement</a></h1>
 
-<p>表单组件基类。</p>
+<p>表单组件基类。<a href="#FormElement">FormElement</a>是<a href="#Input">Input</a>, <a href="#TextArea">TextArea</a>, <a href="#Checkbox">Checkbox</a>, <a href="#Radio">Radio</a>等组件的基类。</p>
 
 <h2>继承</h2>
 
@@ -272,7 +262,7 @@ nodeList.addClass("focus").show();
 
 <ul>
 <li><code>change</code>
-表单数据发生改变了。</li>
+表单数据发生改变时触发。</li>
 </ul>
 
 <h1><a name="Label">Label</a></h1>
@@ -288,13 +278,15 @@ nodeList.addClass("focus").show();
 <h2>方法</h2>
 
 <ul>
-<li><p><code>getValue()</code></p></li>
-<li><p><code>setValue(value)</code></p></li>
+<li><p><code>getValue()</code>
+获取组件的文本。</p></li>
+<li><p><code>setValue(value)</code>
+设置组件的文本。</p></li>
 </ul>
 
 <h1><a name="HTML">HTML</a></h1>
 
-<p>文本组件。</p>
+<p><a href="#HTML">HTML</a>文本组件。</p>
 
 <h2>继承</h2>
 
@@ -305,24 +297,48 @@ nodeList.addClass("focus").show();
 <h2>方法</h2>
 
 <ul>
-<li><p><code>getValue()</code></p></li>
-<li><p><code>setValue(value)</code></p></li>
+<li><p><code>getValue()</code>
+获取组件的html文本</p></li>
+<li><p><code>setValue(value)</code>
+设置组件的html文本</p></li>
 </ul>
 
-<h1><a name="Label">Label</a></h1>
+<h1><a name="Icon">Icon</a></h1>
+
+<p>图标组件。</p>
+
+<pre><code>var icon = new <a href="#E">E</a>.<a href="#Icon">Icon</a>({
+    container: '#icon',
+    cls: 'custom-icon-cls'
+})
+</code></pre>
+
+<h2>继承</h2>
+
+<ul>
+<li><a href="#Component">Component</a></li>
+</ul>
+
+<h1><a name="Button">Button</a></h1>
 
 <p>按钮组件。</p>
 
-<pre><code>var button = new Button({
-    label: "click me",
-    container: "#buttonContainer",
-    signals: {
-        click: function(){
-            alert("button clicked");
+<p>我们可以在构造函数中定义组件的信号回调函数：
+    var button = new <a href="#E">E</a>.<a href="#Button">Button</a>({
+        label: "click me",
+        container: "#buttonContainer",
+        signals: {
+            click: function(){
+                console.log("button is clicked");
+            }
         }
-    }
-});
-</code></pre>
+    });</p>
+
+<p>也可以单独对信号进行监听：
+    var redButton = new <a href="#E">E</a>.<a href="#Button">Button</a>({theme: "red"});
+    redButton.signals.click.add(function(){
+        console.log("red button is clicked");
+    });</p>
 
 <h2>继承</h2>
 
@@ -363,14 +379,14 @@ nodeList.addClass("focus").show();
 
 <ul>
 <li><p><code>getTitle()</code>
-返回标题文本</p></li>
+获取标题文本</p></li>
 <li><p><code>setTitle(title)</code>
 设置标题文本</p></li>
 </ul>
 
 <h1><a name="Box">Box</a></h1>
 
-<p><a href="#Box">Box</a>组件。</p>
+<p><a href="#Box">Box</a>组件。它是<a href="#HBox">HBox</a>和<a href="#VBox">VBox</a>组件的基类。</p>
 
 <h2>继承</h2>
 
@@ -380,7 +396,16 @@ nodeList.addClass("focus").show();
 
 <h1><a name="HBox">HBox</a></h1>
 
-<p><a href="#HBox">HBox</a>组件。</p>
+<p><a href="#HBox">HBox</a>组件。<a href="#HBox">HBox</a>组件中的子组件会以水平方向排列。</p>
+
+<pre><code>var hbox = new <a href="#E">E</a>.<a href="#HBox">HBox</a>({
+    childen: [
+        {className:"<a href="#Button">Button</a>", label:"<a href="#Button">Button</a> A"},
+        {className:"<a href="#Button">Button</a>", label:"<a href="#Button">Button</a> B"},
+        {className:"<a href="#Button">Button</a>", label:"<a href="#Button">Button</a> C"}
+    ]
+});
+</code></pre>
 
 <h2>继承</h2>
 
@@ -390,7 +415,16 @@ nodeList.addClass("focus").show();
 
 <h1><a name="VBox">VBox</a></h1>
 
-<p><a href="#VBox">VBox</a>组件。</p>
+<p><a href="#VBox">VBox</a>组件。<a href="#VBox">VBox</a>组件中的子组件会以竖直方向排列。</p>
+
+<pre><code>var vbox = new <a href="#E">E</a>.<a href="#VBox">VBox</a>({
+    childen: [
+        {className:"<a href="#Button">Button</a>", label:"<a href="#Button">Button</a> A"},
+        {className:"<a href="#Button">Button</a>", label:"<a href="#Button">Button</a> B"},
+        {className:"<a href="#Button">Button</a>", label:"<a href="#Button">Button</a> C"}
+    ]
+});
+</code></pre>
 
 <h2>继承</h2>
 
@@ -448,22 +482,31 @@ toggle的状态发生变化时触发。</li>
 
 <h1><a name="Input">Input</a></h1>
 
-<p><a href="#Input">Input</a>组件。</p>
+<p>输入文本框组件。</p>
+
+<pre><code>//文本框
+var input = new <a href="#E">E</a>.<a href="#Input">Input</a>();
+input.signals.change.add(function(value){
+    console.log("文本框的值变为了:"+value);
+});
+//创建数字文本框
+var digitInput = new <a href="#E">E</a>.<a href="#Input">Input</a>({type:"number",placeholder:"请输入数字"});
+</code></pre>
 
 <h2>继承</h2>
 
 <ul>
-<li>FormElement</li>
+<li><a href="#FormElement">FormElement</a></li>
 </ul>
 
 <h1><a name="TextArea">TextArea</a></h1>
 
-<p><a href="#TextArea">TextArea</a>组件。</p>
+<p>文本域组件。文本域组件可以让用户输入多行的文本。</p>
 
 <h2>继承</h2>
 
 <ul>
-<li>FormElement</li>
+<li><a href="#FormElement">FormElement</a></li>
 </ul>
 
 <h1><a name="Checkbox">Checkbox</a></h1>
@@ -473,7 +516,7 @@ toggle的状态发生变化时触发。</li>
 <h2>继承</h2>
 
 <ul>
-<li>FormElement</li>
+<li><a href="#FormElement">FormElement</a></li>
 </ul>
 
 <h2>方法</h2>
@@ -522,7 +565,7 @@ toggle的状态发生变化时触发。</li>
 <h2>继承</h2>
 
 <ul>
-<li><a href="#ListComponent">ListComponent</a></li>
+<li><a href="#Option">Option</a></li>
 </ul>
 
 <h1><a name="ViewStack">ViewStack</a></h1>
@@ -650,6 +693,7 @@ toggle的状态发生变化时触发。</li>
 <ul>
 <li><a href="#Box">Box</a></li>
 <li><a href="#BusyIndicator">BusyIndicator</a></li>
+<li><a href="#Button">Button</a></li>
 </ul>
 
 <h2>C</h2>
@@ -664,6 +708,12 @@ toggle的状态发生变化时触发。</li>
 
 <ul>
 <li><a href="#E">E</a></li>
+</ul>
+
+<h2>F</h2>
+
+<ul>
+<li><a href="#FormElement">FormElement</a></li>
 </ul>
 
 <h2>G</h2>
@@ -683,6 +733,7 @@ toggle的状态发生变化时触发。</li>
 <h2>I</h2>
 
 <ul>
+<li><a href="#Icon">Icon</a></li>
 <li><a href="#Input">Input</a></li>
 </ul>
 
