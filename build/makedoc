@@ -1,0 +1,1 @@
+./jodoc --title "Caf UI docs" --template template.html CONTENT.mdown ../release/temp/docs.js > ../docs/index.html --markdown Markdown.pl --smartypants SmartyPants.pl 

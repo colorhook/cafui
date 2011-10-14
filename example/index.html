@@ -1,0 +1,265 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width">
+	<meta name="format-detection" content="false">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<title>Caf UI</title>
+	<link rel="stylesheet" href="../themes/default/cafui.css">
+	<script src="../release/cafui-1.0.0.js"></script>
+	<style>
+	body {
+		margin: 0;
+		padding: 0;
+		word-wrap: break-word;
+		overflow: hidden;
+		text-shadow:0px 1px 1px #ffffff;
+		color:#554f44;
+		font-size:20px;
+		font-family:"文泉驿微米黑";
+		font-weight:700;
+		-webkit-text-size-adjust:none;
+	}
+	body{
+		display:-webkit-box;
+		-webkit-box-pack: center;
+	}
+	#container{
+		width:480px;
+		height:800px;
+	}
+	</style>
+</head>
+<body>
+	<div id="container"></div>
+<script>
+var navbar = new E.NavBar({
+	title: 'Easy UI'
+});
+var tab = new E.Tab({
+	data: ["Basic","Form", "List", "Popup"],
+	signals: {
+		change: function(changeIndex){
+			//alert(changeIndex)
+		}
+	}
+});
+var option = new E.Option({
+	data: ["option1", "option2", "option3", "option4"],
+	signals:{
+		change: function(changeIndex){
+			//alert(changeIndex);
+		}
+	}
+});
+var buttonGroup = new E.Group({
+	children:[
+		{
+			className: "HBox",
+			children:[{
+					className: "Button",
+					label: '默认'
+				},{
+					className: "Button",
+					label: '禁用',
+					disabled: true,
+				},{
+					className: "Button",
+					theme: 'red',
+					label: '红色'
+				},{
+					className: "Button",
+					theme: 'yellow',
+					label: '黄色'
+				},{
+					className: "Button",
+					theme: 'green',
+					label: '绿色'
+				}]
+		}
+	]
+});
+var toggleGroup = new E.Group({
+	children:[
+		{className:"Toggle", onLabel:"开", offLabel:"关"},
+		{className:"Toggle",onLabel:"上午", offLabel:"下午", closeHighlight:true}
+	]
+});
+var label = new E.Label({
+	value: "Label Component: <b><i><u>HTML string</u></i></b>"
+});
+var html = new E.HTML({
+	value: "HTML Component: <b><i><u>HTML string</u></i></b>"
+});
+var optionGroup = new E.Group({
+	children:[
+		new E.Option({
+			data: ["选项1", "选项2", "选项3"]
+		})
+	]
+});
+var indicatorGroup = new E.Group({
+	children:[
+		{className:"BusyIndicator", size: 's'},
+		new E.BusyIndicator({size: 'm'}),
+		new E.BusyIndicator(),
+		new E.BusyIndicator({size: 'xl'}),
+		new E.BusyIndicator({size: 'xxl'})
+	]
+});
+var hRule = new E.HRule();
+var listData = [
+	{
+		label: "飞行模式",
+		description: "停用所有的无线连接",
+		rightInterface: E.Toggle,
+		rightInterfaceOptions:{
+			on: true
+		}
+	},
+	{
+		label: "WLAN",
+		description: "停用所有的无线连接",
+		rightInterface: E.Toggle
+	},
+	{
+		label: "WLAN设置",
+		description: "管理和设置无线接入点"
+	},
+	{
+		label: "Checbox",
+		rightInterface: E.Checkbox
+	},
+	{
+		label: "Radio",
+		rightInterface: new E.Radio({checked:true})
+	}
+]
+var list = new E.List({
+	data: listData,
+	rendererOptions:{
+		rightInterface: E.Icon,
+		rightInterfaceOptions: {
+			cls: 'e-icon-expando'
+		}
+
+	}
+});
+var id=0;
+var addRemoveGroup = new E.HBox({
+	children:[{
+		className: 'Button',
+		label: "移除第一项",
+		signals:{
+			click: function(){
+				list.removeItemAt(0);
+			}
+		}
+	},{
+		className: 'Button',
+		label: "随机添加新项",
+		signals:{
+			click: function(){
+				list.addItemAt({label:"新加项"+id++}, Math.floor(Math.random()*list.getData().length));
+			}
+		}
+	}]
+});
+list.signals.itemClick.add(function(index, item){
+	var msg = item;
+	if(E.isObject(msg) && msg.label){
+		msg = msg.label;
+	}
+	E.Alert.show(new E.HTML({value:"你选择了<em style='color:red;'>"+msg+"</em>"}));
+});
+var checkboxGroup =  new E.Group({
+	children: [
+		{className:"Checkbox", disabled: true},
+		{className:"Checkbox", disabled: true, checked: true},
+		new E.Checkbox(),
+		new E.Checkbox({checked: true})
+	]
+});
+var radioGroup = new E.Group({
+	children: [
+		new E.Radio({disabled: true}),
+		new E.Radio({disabled: true, checked: true}),
+		new E.Radio({}),
+		new E.Radio({checked: true})
+	]
+});
+var inputGroup = new E.Group({
+	children:[
+		{className: "Input", placeholder: "请输入用户名"},
+		{className: "Input", type:'password', placeholder: "请输入密码"},
+		{className: "Input", type:'number', placeholder: "请输入年龄"},
+		{className: "TextArea", placeholder: "请输入简介"}
+	]
+});
+var viewStack = new E.ViewStack({
+	data:[
+		//item 1
+		new E.Container({
+			children: [ buttonGroup, toggleGroup, label, hRule, html, optionGroup, indicatorGroup]
+		}),
+		//item 2
+		new E.Container({
+			children: [checkboxGroup, radioGroup, inputGroup]
+		}),
+		//item 3,
+		new E.Container({
+			children: [addRemoveGroup, list]
+		}),
+		//item 4
+		new E.Container({
+			children: [{
+				className: "Group",
+				children:[{
+						className: "Button",
+						label: "alert",
+						signals: {
+							click: function(){
+								E.Alert.show("Alert content: <b>haha~~</b><br/><i>click the OK button to close this popup</i>");
+							}
+						}
+					},{
+						className: "Button",
+						label: "confirm",
+						signals: {
+							click: function(){
+								E.Alert.show("Alert content: <b>haha~~</b><br/><i>click the OK or CANCEL button to close this popup</i>", null, E.Alert.OK | E.Alert.CANCEL, function(button){
+									E.Alert.show("You click the "+(button==E.Alert.OK ? "OK":"Cancel")+" button");
+								});
+							}
+						}
+					},{
+						className: "Button",
+						label: "show busy indicator",
+						signals: {
+							click: function(){
+								E.Shim.showBusyIndicator('M');
+								setTimeout(function(){
+									E.Shim.hideBusyIndicator();
+								}, 1000);
+							}
+						}
+					}]
+				}]
+		})
+	]
+});
+
+var container = new E.Container({
+	container: "#container",
+	children: [
+		navbar, tab, viewStack
+	]
+});
+tab.signals.change.add(function(i){
+	viewStack.setSelectedIndex(i);
+});
+</script>
+</body>
+</html>

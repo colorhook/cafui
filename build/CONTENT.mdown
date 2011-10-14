@@ -1,0 +1,127 @@
+<cite>Caf<cite>UI框架</cite></cite>
+
+快速入口
+========
+
+- 简介
+- 快速上手
+- 类结构
+- 版本说明
+- API参考手册
+- [索引](#索引)
+
+简介
+========
+
+Caf UI是一套简洁的用于设计和开发Mobile App的UI框架，它的设计理念是使用脚本快速地构建应用程序。框架中提供了三大块功能。
+
+* DOM操作 
+
+Caf UI框架提供了一些操作DOM的方法，比如样式的查询与修改，CSS class的添加与删除，attribute属性的查询与设置等。
+
+* 事件驱动
+
+用户界面经常需要响应用户事件，所以事件驱动式的程序设计在UI为主的应用中非常重要，Caf UI框架提供了一套简介的事件处理机制，使用Signal这个类，可以方便底在应用中进行事件传递。
+
+* UI组件
+
+框架中提供了一些基本的UI组件，比如按钮，单选框，复选框，列表，选项卡，忙指示器，开关，弹出提示面板等。
+
+
+
+快速上手
+========
+创建一个应用之前，首先要在应用程序中引入对应的脚本和样式。
+`page.xml` 
+-------------
+接下来在页面中通过`html`代码开辟一块区域用于显示组件。
+
+	<div id="container"></div>
+
+然后通过脚本构建所有的UI组件。
+`helloworld.js`
+-------------
+
+	//创建一个顶级容器
+	var view = new E.Container({container:"#container"});
+
+	//创建一个导航条
+	var navbar = new E.NavBar({title: "Hello World"});
+	view.addChild(navbar);
+
+	//创建一个选项卡
+	var tab = new E.Tab({data: ["好友", "最近", "我的群"]});
+	view.addChild(tab);
+
+	//创建可切换试图组件
+	var viewstack = new E.ViewStack();
+	viewstack.addItem(new E.Container({
+		  children:[
+			new E.Label({value: "这个是好友页面"})
+		  ]
+	}));
+	viewstack.addItem(new E.Container({
+		  children:[
+			new E.Label({value: "这个是最近页"})
+		  ]
+	}));
+	viewstack.addItem(new E.Container({
+		  children:[
+			new E.Label({value: "这个是我的群"})
+		  ]
+	}));
+	view.addChild(viewstack);
+
+	//绑定选项卡和可切换试图
+	tab.signals.change.add(function(selectedIndex){
+		viewstack.setSelectedIndex(selectedIndex);
+	});
+
+	//弹出一个提示框
+	E.Alert.show("你成功地创建了一个应用！", "恭喜你");
+
+类结构
+========
+
+* E
+* Signal
+* Component
+	* Label
+		* HTML
+	* Button
+	* NavBar
+	* HRule
+	* VRule
+	* Icon
+	* Toggle
+	* FormElement
+		* Input
+		* Checkbox
+		* Radio
+		* TextArea
+	* Container
+		* Box
+			* HBox
+			* VBox
+		* Group
+		* Shim
+			* Alert
+		* Panel
+	* ListComponent
+		* Option
+			* Tab
+		* ViewStack
+
+版本说明
+========
+
+V1.0.0 (2011-10-13)
+--------
+初始版本，包含一些基本组件。
+
+
+<em class="api-tag">
+API参考手册
+========
+
+</em>

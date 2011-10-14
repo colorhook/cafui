@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="JPE build project" basedir="../" default="build">
+
+	<property file="${basedir}/build/build.properties" />
+
+	<target name="build" depends="bundle_javascript, create-temp, docs, yui-compress, move-compressed-files" />
+
+	<target name="bundle_javascript">
+		<echo>${dir.src}</echo>
+		 <concat destfile="${dir.release}/temp/${release.name}.js" encoding="utf-8"  fixlastline="yes">
+			<file file="${release.license}"/>
+			<filelist dir="${dir.src}" files="${release.files}"/>
+      </concat>
+      <echo>JavaScript Bundles Done!</echo>
+   </target>
+
+   <target name="docs" depends="bundle_javascript">
+		<copy tofile="${dir.release}/temp/docs.js" file="${dir.release}/temp/${release.name}.js"/>
+		<exec dir="${dir.build}" executable="bash"> 
+			<arg value="makedoc"/>
+        </exec>
+		<delete file="${dir.release}/temp/docs.js"/>
+   </target>
+
+    <!--compress js file by YUI compressor-->
+    <target name="yui-compress">
+       <apply executable="java" parallel="false" verbose="true" dest="${dir.release}" taskname="js.compile">
+			<fileset dir="${dir.release}/temp">
+				<include name="*.js"/>
+			</fileset>
+			<arg line="-jar"/>
+			<arg path="${compress.yui}" />  
+			<arg line="--type js --charset UTF-8 -o" />
+			<mapper type="glob" from="*.js" to="temp/${release.yui-name}.js" />
+			<targetfile />
+		</apply>
+		<echo>YUI Compress Done!</echo>
+    </target>
+
+
+	<target name="move-compressed-files">
+		<copy todir="${dir.release}">
+			<fileset dir="${dir.release}/temp" >
+				<include name="*.js"/>
+			</fileset>
+		</copy>
+		<delete dir="${dir.release}/temp"/>
+   </target>
+
+
+	<target name="clean">
+      <echo>Delete Build Folder</echo>
+      <delete dir="${dir.release}"/>
+      <echo>Create Build Folder</echo>
+      <mkdir dir="${dir.release}"/>
+   </target>
+
+   <target name="create-temp">
+      <echo>Create Temp Folder</echo>
+      <mkdir dir="${dir.release}/temp"/>
+   </target>
+
+</project>

@@ -58,11 +58,12 @@ sub docker {
 # templates can use $body, $title
 sub html_head {
     my $body = shift;
-
+    my $index = indexer();
     my $output = $template_html;
 
     $output =~ s{\$title}{$title}g;
     $output =~ s{\$body}{$body}g;
+    $output =~ s{\$index}{$index}g;
 
     return $output;
 }
@@ -146,11 +147,14 @@ sub autolink {
 # Make an alphasorted index
 sub indexer {
     my @keywords   = keys %h1s;
-    my $index      = qq(\n\n<hr>\n\n<h1>Index</h1>\n<div id="index">\n);
+    my $index      = qq(\n\n<hr>\n\n<h1><a name="索引">索引</a></h1>\n<div id="index">\n);
     my $lastletter = "ZZ";
 
     for my $i ( sort { lc($a) cmp lc($b) } @keywords ) {
         my $letter = uc( substr( $i, 0, 1 ) );
+	if($letter gt "Z"){
+	   $letter = "其它";
+	}
         if ( $letter ne $lastletter ) {
             if ( $lastletter ne "ZZ" ) {
                 $index .= "</ul>\n";
@@ -355,6 +359,7 @@ sub main {
 
     # Print docs to separate files in the same hierarchy as the input
     if ($outputdir) {
+    return;
         $processed{"_index.html"} = indexer;
         mkdir $outputdir;
         for my $file ( keys %processed ) {
@@ -389,7 +394,7 @@ sub main {
 			$tempout .= $processed{$i};
 		}
 #        my $tempout = join( "", values %processed );
-        $tempout = html_head($tempout) . indexer;
+        $tempout = html_head($tempout) ;
         if ($use_tidy) {
             $tempout = tidy_pipe($tempout);
         }
